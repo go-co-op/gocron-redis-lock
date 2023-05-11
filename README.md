@@ -3,7 +3,7 @@
 ## install
 
 ```
-go get github.com/go-co-op/gocron/lockers/redislock
+go get github.com/go-co-op/gocron-redis-lock
 ```
 
 ## usage
@@ -17,7 +17,7 @@ import (
 	"time"
 
 	"github.com/go-co-op/gocron"
-	"github.com/go-co-op/gocron/lockers/redislock"
+	redislock "github.com/go-co-op/gocron-redis-lock"
 	"github.com/redis/go-redis/v9"
 )
 
