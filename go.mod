@@ -1,4 +1,4 @@
-module github.com/go-co-op/gocron/lockers/redislock
+module github.com/go-co-op/gocron-redis-lock
 
 go 1.20
 
