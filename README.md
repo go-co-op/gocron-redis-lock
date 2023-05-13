@@ -14,11 +14,13 @@ Here is an example usage that would be deployed in multiple instances
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/go-co-op/gocron"
-	redislock "github.com/go-co-op/gocron-redis-lock"
 	"github.com/redis/go-redis/v9"
+
+	redislock "github.com/go-co-op/gocron-redis-lock"
 )
 
 func main() {
@@ -26,9 +28,9 @@ func main() {
 		Addr: "localhost:6379",
 	}
 	redisClient := redis.NewClient(redisOptions)
-	locker, err := redislock.NewRedisLocker(redisClient)
+	locker, err := redislock.NewRedisLocker(redisClient, redislock.WithTries(1))
 	if err != nil {
-		// handle the error
+		panic(err)
 	}
 
 	s := gocron.NewScheduler(time.UTC)
@@ -36,9 +38,10 @@ func main() {
 
 	_, err = s.Every("1s").Name("unique_name").Do(func() {
 		// task to do
+		fmt.Println("call 1s")
 	})
 	if err != nil {
-		// handle the error
+		panic(err)
 	}
 
 	s.StartBlocking()
