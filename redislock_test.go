@@ -32,7 +32,7 @@ func TestEnableDistributedLocking(t *testing.T) {
 	}
 
 	redisClient := redis.NewClient(&redis.Options{Addr: strings.TrimPrefix(uri, "redis://")})
-	l, err := NewRedisLocker(redisClient)
+	l, err := NewRedisLocker(redisClient, WithTries(1))
 	require.NoError(t, err)
 
 	s1 := gocron.NewScheduler(time.UTC)
