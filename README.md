@@ -30,7 +30,7 @@ func main() {
 	redisClient := redis.NewClient(redisOptions)
 	locker, err := redislock.NewRedisLocker(redisClient, redislock.WithTries(1))
 	if err != nil {
-		panic(err)
+		// handle the error
 	}
 
 	s := gocron.NewScheduler(time.UTC)
@@ -41,7 +41,7 @@ func main() {
 		fmt.Println("call 1s")
 	})
 	if err != nil {
-		panic(err)
+		// handle the error
 	}
 
 	s.StartBlocking()
