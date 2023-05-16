@@ -3,7 +3,7 @@ module github.com/go-co-op/gocron-redis-lock
 go 1.20
 
 require (
-	github.com/go-co-op/gocron v1.26.0
+	github.com/go-co-op/gocron v1.27.0
 	github.com/go-redsync/redsync/v4 v4.8.1
 	github.com/redis/go-redis/v9 v9.0.4
 	github.com/stretchr/testify v1.8.2
@@ -43,6 +43,7 @@ require (
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/testcontainers/testcontainers-go v0.20.1 // indirect
+	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
 	google.golang.org/genproto v0.0.0-20220617124728-180714bec0ad // indirect
