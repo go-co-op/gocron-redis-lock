@@ -1,5 +1,8 @@
 # redislock
 
+[![CI State](https://github.com/go-co-op/gocron-redis-lock/actions/workflows/go_test.yml/badge.svg?branch=main&event=push)](https://github.com/go-co-op/gocron-redis-lock/actions)
+![Go Report Card](https://goreportcard.com/badge/github.com/go-co-op/gocron-redis-lock) [![Go Doc](https://godoc.org/github.com/go-co-op/gocron-redis-lock?status.svg)](https://pkg.go.dev/github.com/go-co-op/gocron-redis-lock)
+
 ## install
 
 ```
