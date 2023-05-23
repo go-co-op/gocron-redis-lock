@@ -24,7 +24,7 @@ var (
 
 // NewRedisLocker provides an implementation of the Locker interface using
 // redis for storage.
-func NewRedisLocker(r *redis.Client, options ...redsync.Option) (gocron.Locker, error) {
+func NewRedisLocker(r redis.UniversalClient, options ...redsync.Option) (gocron.Locker, error) {
 	if err := r.Ping(context.Background()).Err(); err != nil {
 		return nil, fmt.Errorf("%s: %w", gocron.ErrFailedToConnectToRedis, err)
 	}
