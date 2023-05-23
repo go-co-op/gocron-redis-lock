@@ -50,3 +50,43 @@ func main() {
 	s.StartBlocking()
 }
 ```
+
+The redis UniversalClient can also be used
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/go-co-op/gocron"
+	"github.com/redis/go-redis/v9"
+
+	redislock "github.com/go-co-op/gocron-redis-lock"
+)
+
+func main() {
+	redisOptions := &redis.UniversalOptions{
+		Addrs: []string{"localhost:6379"},
+	}
+	redisClient := redis.NewUniversalClient(redisOptions)
+	locker, err := redislock.NewRedisLocker(redisClient, redislock.WithTries(1))
+	if err != nil {
+		// handle the error
+	}
+
+	s := gocron.NewScheduler(time.UTC)
+	s.WithDistributedLocker(locker)
+
+	_, err = s.Every("1s").Name("unique_name").Do(func() {
+		// task to do
+		fmt.Println("call 1s")
+	})
+	if err != nil {
+		// handle the error
+	}
+
+	s.StartBlocking()
+}
+```
