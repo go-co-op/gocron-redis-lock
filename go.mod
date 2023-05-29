@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/go-co-op/gocron v1.27.1
 	github.com/go-redsync/redsync/v4 v4.8.1
-	github.com/redis/go-redis/v9 v9.0.4
+	github.com/redis/go-redis/v9 v9.0.5
 	github.com/stretchr/testify v1.8.3
 	github.com/testcontainers/testcontainers-go/modules/redis v0.20.1
 )
