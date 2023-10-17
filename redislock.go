@@ -28,10 +28,19 @@ func NewRedisLocker(r redis.UniversalClient, options ...redsync.Option) (gocron.
 	if err := r.Ping(context.Background()).Err(); err != nil {
 		return nil, fmt.Errorf("%s: %w", gocron.ErrFailedToConnectToRedis, err)
 	}
+	return newLocker(r, options...), nil
+}
 
+// NewRedisLockerAlways provides an implementation of the Locker interface using
+// redis for storage, even if the connection fails.
+func NewRedisLockerAlways(r redis.UniversalClient, options ...redsync.Option) (gocron.Locker, error) {
+	return newLocker(r, options...), r.Ping(context.Background()).Err()
+}
+
+func newLocker(r redis.UniversalClient, options ...redsync.Option) gocron.Locker {
 	pool := goredis.NewPool(r)
 	rs := redsync.New(pool)
-	return &redisLocker{rs: rs, options: options}, nil
+	return &redisLocker{rs: rs, options: options}
 }
 
 var _ gocron.Locker = (*redisLocker)(nil)
