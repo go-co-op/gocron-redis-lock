@@ -6,7 +6,7 @@ replace github.com/docker/docker v23.0.5+incompatible => github.com/docker/docke
 
 require (
 	github.com/go-co-op/gocron v1.35.3
-	github.com/go-redsync/redsync/v4 v4.10.0
+	github.com/go-redsync/redsync/v4 v4.11.0
 	github.com/redis/go-redis/v9 v9.2.1
 	github.com/stretchr/testify v1.8.4
 	github.com/testcontainers/testcontainers-go/modules/redis v0.26.0
