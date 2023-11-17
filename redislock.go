@@ -2,9 +2,10 @@ package redislock
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"github.com/go-co-op/gocron/v2"
 
-	"github.com/go-co-op/gocron"
 	"github.com/go-redsync/redsync/v4"
 	"github.com/go-redsync/redsync/v4/redis/goredis/v9"
 	"github.com/redis/go-redis/v9"
@@ -20,13 +21,17 @@ var (
 	WithTimeoutFactor  = redsync.WithTimeoutFactor
 	WithTries          = redsync.WithTries
 	WithValue          = redsync.WithValue
+
+	ErrFailedToConnectToRedis = errors.New("gocron: failed to connect to redis")
+	ErrFailedToObtainLock     = errors.New("gocron: failed to obtain lock")
+	ErrFailedToReleaseLock    = errors.New("gocron: failed to release lock")
 )
 
 // NewRedisLocker provides an implementation of the Locker interface using
 // redis for storage.
 func NewRedisLocker(r redis.UniversalClient, options ...redsync.Option) (gocron.Locker, error) {
 	if err := r.Ping(context.Background()).Err(); err != nil {
-		return nil, fmt.Errorf("%s: %w", gocron.ErrFailedToConnectToRedis, err)
+		return nil, fmt.Errorf("%s: %w", ErrFailedToConnectToRedis, err)
 	}
 	return newLocker(r, options...), nil
 }
@@ -54,7 +59,7 @@ func (r *redisLocker) Lock(ctx context.Context, key string) (gocron.Lock, error)
 	mu := r.rs.NewMutex(key, r.options...)
 	err := mu.LockContext(ctx)
 	if err != nil {
-		return nil, gocron.ErrFailedToObtainLock
+		return nil, ErrFailedToObtainLock
 	}
 	rl := &redisLock{
 		mu: mu,
@@ -71,10 +76,10 @@ type redisLock struct {
 func (r *redisLock) Unlock(ctx context.Context) error {
 	unlocked, err := r.mu.UnlockContext(ctx)
 	if err != nil {
-		return gocron.ErrFailedToReleaseLock
+		return ErrFailedToReleaseLock
 	}
 	if !unlocked {
-		return gocron.ErrFailedToReleaseLock
+		return ErrFailedToReleaseLock
 	}
 
 	return nil

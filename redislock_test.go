@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-co-op/gocron"
+	"github.com/go-co-op/gocron/v2"
 	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -35,30 +35,30 @@ func TestEnableDistributedLocking(t *testing.T) {
 	l, err := NewRedisLocker(redisClient, WithTries(1))
 	require.NoError(t, err)
 
-	s1 := gocron.NewScheduler(time.UTC)
-	s1.WithDistributedLocker(l)
-	_, err = s1.Every("500ms").Do(f, 1)
+	s1, err := gocron.NewScheduler(gocron.WithDistributedLocker(l))
+	require.NoError(t, err)
+	_, err = s1.NewJob(gocron.DurationJob(500*time.Millisecond), gocron.NewTask(f, 1))
 	require.NoError(t, err)
 
-	s2 := gocron.NewScheduler(time.UTC)
-	s2.WithDistributedLocker(l)
-	_, err = s2.Every("500ms").Do(f, 2)
+	s2, err := gocron.NewScheduler(gocron.WithDistributedLocker(l))
+	require.NoError(t, err)
+	_, err = s1.NewJob(gocron.DurationJob(500*time.Millisecond), gocron.NewTask(f, 2))
 	require.NoError(t, err)
 
-	s3 := gocron.NewScheduler(time.UTC)
-	s3.WithDistributedLocker(l)
-	_, err = s3.Every("500ms").Do(f, 3)
+	s3, err := gocron.NewScheduler(gocron.WithDistributedLocker(l))
+	require.NoError(t, err)
+	_, err = s1.NewJob(gocron.DurationJob(500*time.Millisecond), gocron.NewTask(f, 3))
 	require.NoError(t, err)
 
-	s1.StartAsync()
-	s2.StartAsync()
-	s3.StartAsync()
+	s1.Start()
+	s2.Start()
+	s3.Start()
 
 	time.Sleep(1700 * time.Millisecond)
 
-	s1.Stop()
-	s2.Stop()
-	s3.Stop()
+	require.NoError(t, s1.Shutdown())
+	require.NoError(t, s2.Shutdown())
+	require.NoError(t, s3.Shutdown())
 	close(resultChan)
 
 	var results []int

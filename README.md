@@ -6,7 +6,7 @@
 ## install
 
 ```
-go get github.com/go-co-op/gocron-redis-lock
+go get github.com/go-co-op/gocron-redis-lock/v2
 ```
 
 ## usage
@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/go-co-op/gocron"
+	"github.com/go-co-op/gocron/v2"
 	"github.com/redis/go-redis/v9"
 
 	redislock "github.com/go-co-op/gocron-redis-lock"
@@ -36,18 +36,18 @@ func main() {
 		// handle the error
 	}
 
-	s := gocron.NewScheduler(time.UTC)
-	s.WithDistributedLocker(locker)
-
-	_, err = s.Every("1s").Name("unique_name").Do(func() {
-		// task to do
-		fmt.Println("call 1s")
-	})
+	s, err := gocron.NewScheduler(gocron.WithDistributedLocker(locker))
 	if err != nil {
 		// handle the error
 	}
-
-	s.StartBlocking()
+	_, err = s.NewJob(gocron.DurationJob(500*time.Millisecond), gocron.NewTask(func() {
+		// task to do
+	}, 1))
+	if err != nil {
+		// handle the error
+	}
+	
+	s.Start()
 }
 ```
 
@@ -60,7 +60,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/go-co-op/gocron"
 	"github.com/redis/go-redis/v9"
 
 	redislock "github.com/go-co-op/gocron-redis-lock"
@@ -75,18 +74,5 @@ func main() {
 	if err != nil {
 		// handle the error
 	}
-
-	s := gocron.NewScheduler(time.UTC)
-	s.WithDistributedLocker(locker)
-
-	_, err = s.Every("1s").Name("unique_name").Do(func() {
-		// task to do
-		fmt.Println("call 1s")
-	})
-	if err != nil {
-		// handle the error
-	}
-
-	s.StartBlocking()
 }
 ```
