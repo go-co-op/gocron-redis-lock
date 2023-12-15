@@ -32,7 +32,7 @@ func TestEnableDistributedLocking(t *testing.T) {
 	}
 
 	redisClient := redis.NewClient(&redis.Options{Addr: strings.TrimPrefix(uri, "redis://")})
-	l, err := NewRedisLocker(redisClient, WithTries(1))
+	l, err := NewRedisLocker(redisClient, 0, WithTries(1))
 	require.NoError(t, err)
 
 	s1 := gocron.NewScheduler(time.UTC)
@@ -66,4 +66,45 @@ func TestEnableDistributedLocking(t *testing.T) {
 		results = append(results, r)
 	}
 	assert.Len(t, results, 4)
+}
+
+func TestAutoExtend(t *testing.T) {
+	ctx := context.Background()
+	redisContainer, err := testcontainersredis.RunContainer(ctx)
+	require.NoError(t, err)
+	t.Cleanup(func() {
+		if err := redisContainer.Terminate(ctx); err != nil {
+			t.Fatalf("failed to terminate container: %s", err)
+		}
+	})
+
+	uri, err := redisContainer.ConnectionString(ctx)
+	require.NoError(t, err)
+
+	redisClient := redis.NewClient(&redis.Options{Addr: strings.TrimPrefix(uri, "redis://")})
+	l1, err := NewRedisLocker(redisClient, 0, WithTries(1))
+	_, err = l1.Lock(ctx, "test1")
+	require.NoError(t, err)
+
+	t.Logf("waiting 9 seconds for lock to expire")
+	// wait for the lock to expire
+	time.Sleep(9 * time.Second)
+
+	_, err = l1.Lock(ctx, "test1")
+	require.NoError(t, err)
+
+	// create auto extend lock
+	l2, err := NewRedisLocker(redisClient, time.Second*2, WithTries(1))
+	unlocker, err := l2.Lock(ctx, "test2")
+	require.NoError(t, err)
+
+	t.Log("waiting 9 seconds for lock to expire")
+	// wait for the lock to expire
+	time.Sleep(9 * time.Second)
+
+	_, err = l2.Lock(ctx, "test2")
+	require.Equal(t, gocron.ErrFailedToObtainLock, err)
+
+	err = unlocker.Unlock(ctx)
+	require.NoError(t, err)
 }
