@@ -31,7 +31,7 @@ func main() {
 		Addr: "localhost:6379",
 	}
 	redisClient := redis.NewClient(redisOptions)
-	locker, err := redislock.NewRedisLocker(redisClient, redislock.WithTries(1))
+	locker, err := redislock.NewRedisLocker(redisClient,time.Second * 2, redislock.WithTries(1))
 	if err != nil {
 		// handle the error
 	}
@@ -71,7 +71,7 @@ func main() {
 		Addrs: []string{"localhost:6379"},
 	}
 	redisClient := redis.NewUniversalClient(redisOptions)
-	locker, err := redislock.NewRedisLocker(redisClient, redislock.WithTries(1))
+	locker, err := redislock.NewRedisLocker(redisClient,time.Second * 2, redislock.WithTries(1))
 	if err != nil {
 		// handle the error
 	}
