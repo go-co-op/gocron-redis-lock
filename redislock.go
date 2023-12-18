@@ -3,6 +3,7 @@ package redislock
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/go-co-op/gocron"
 	"github.com/go-redsync/redsync/v4"
@@ -37,17 +38,36 @@ func NewRedisLockerAlways(r redis.UniversalClient, options ...redsync.Option) (g
 	return newLocker(r, options...), r.Ping(context.Background()).Err()
 }
 
+func NewRedisLockerWithOptions(r redis.UniversalClient, options ...LockerOption) (gocron.Locker, error) {
+	if err := r.Ping(context.Background()).Err(); err != nil {
+		return nil, fmt.Errorf("%s: %w", gocron.ErrFailedToConnectToRedis, err)
+	}
+	return newLockerWithOptions(r, options...), nil
+}
+
 func newLocker(r redis.UniversalClient, options ...redsync.Option) gocron.Locker {
 	pool := goredis.NewPool(r)
 	rs := redsync.New(pool)
 	return &redisLocker{rs: rs, options: options}
 }
 
+func newLockerWithOptions(r redis.UniversalClient, options ...LockerOption) gocron.Locker {
+	pool := goredis.NewPool(r)
+	rs := redsync.New(pool)
+	l := &redisLocker{rs: rs}
+	for _, option := range options {
+		option(l)
+	}
+
+	return l
+}
+
 var _ gocron.Locker = (*redisLocker)(nil)
 
 type redisLocker struct {
-	rs      *redsync.Redsync
-	options []redsync.Option
+	rs                 *redsync.Redsync
+	options            []redsync.Option
+	autoExtendDuration time.Duration
 }
 
 func (r *redisLocker) Lock(ctx context.Context, key string) (gocron.Lock, error) {
@@ -57,7 +77,13 @@ func (r *redisLocker) Lock(ctx context.Context, key string) (gocron.Lock, error)
 		return nil, gocron.ErrFailedToObtainLock
 	}
 	rl := &redisLock{
-		mu: mu,
+		mu:                 mu,
+		autoExtendDuration: r.autoExtendDuration,
+		done:               make(chan struct{}),
+	}
+
+	if r.autoExtendDuration > 0 {
+		go func() { rl.doExtend() }()
 	}
 	return rl, nil
 }
@@ -65,10 +91,13 @@ func (r *redisLocker) Lock(ctx context.Context, key string) (gocron.Lock, error)
 var _ gocron.Lock = (*redisLock)(nil)
 
 type redisLock struct {
-	mu *redsync.Mutex
+	mu                 *redsync.Mutex
+	done               chan struct{}
+	autoExtendDuration time.Duration
 }
 
 func (r *redisLock) Unlock(ctx context.Context) error {
+	close(r.done)
 	unlocked, err := r.mu.UnlockContext(ctx)
 	if err != nil {
 		return gocron.ErrFailedToReleaseLock
@@ -78,4 +107,19 @@ func (r *redisLock) Unlock(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (r *redisLock) doExtend() {
+	ticker := time.NewTicker(r.autoExtendDuration)
+	for {
+		select {
+		case <-r.done:
+			return
+		case <-ticker.C:
+			_, err := r.mu.Extend()
+			if err != nil {
+				return
+			}
+		}
+	}
 }
