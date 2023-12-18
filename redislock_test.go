@@ -32,7 +32,7 @@ func TestEnableDistributedLocking(t *testing.T) {
 	}
 
 	redisClient := redis.NewClient(&redis.Options{Addr: strings.TrimPrefix(uri, "redis://")})
-	l, err := NewRedisLocker(redisClient, 0, WithTries(1))
+	l, err := NewRedisLocker(redisClient, WithTries(1))
 	require.NoError(t, err)
 
 	s1 := gocron.NewScheduler(time.UTC)
@@ -82,7 +82,8 @@ func TestAutoExtend(t *testing.T) {
 	require.NoError(t, err)
 
 	redisClient := redis.NewClient(&redis.Options{Addr: strings.TrimPrefix(uri, "redis://")})
-	l1, err := NewRedisLocker(redisClient, 0, WithTries(1))
+	// create lock not auto extend
+	l1, err := NewRedisLockerWithOptions(redisClient, WithRedsyncOptions(WithTries(1)))
 	_, err = l1.Lock(ctx, "test1")
 	require.NoError(t, err)
 
@@ -94,7 +95,7 @@ func TestAutoExtend(t *testing.T) {
 	require.NoError(t, err)
 
 	// create auto extend lock
-	l2, err := NewRedisLocker(redisClient, time.Second*2, WithTries(1))
+	l2, err := NewRedisLockerWithOptions(redisClient, WithAutoExtendDuration(time.Second*2), WithRedsyncOptions(WithTries(1)))
 	unlocker, err := l2.Lock(ctx, "test2")
 	require.NoError(t, err)
 
