@@ -84,6 +84,7 @@ func TestAutoExtend(t *testing.T) {
 	redisClient := redis.NewClient(&redis.Options{Addr: strings.TrimPrefix(uri, "redis://")})
 	// create lock not auto extend
 	l1, err := NewRedisLockerWithOptions(redisClient, WithRedsyncOptions(WithTries(1)))
+	require.NoError(t, err)
 	_, err = l1.Lock(ctx, "test1")
 	require.NoError(t, err)
 
@@ -96,6 +97,7 @@ func TestAutoExtend(t *testing.T) {
 
 	// create auto extend lock
 	l2, err := NewRedisLockerWithOptions(redisClient, WithAutoExtendDuration(time.Second*2), WithRedsyncOptions(WithTries(1)))
+	require.NoError(t, err)
 	unlocker, err := l2.Lock(ctx, "test2")
 	require.NoError(t, err)
 
