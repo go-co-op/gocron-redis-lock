@@ -23,7 +23,7 @@ jobs:
         with:
           version: v1.51.2
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
       - name: test
