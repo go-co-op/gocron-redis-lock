@@ -3,7 +3,7 @@ module github.com/go-co-op/gocron-redis-lock/v2
 go 1.20
 
 require (
-	github.com/go-co-op/gocron/v2 v2.1.2
+	github.com/go-co-op/gocron/v2 v2.2.4
 	github.com/go-redsync/redsync/v4 v4.11.0
 	github.com/redis/go-redis/v9 v9.4.0
 	github.com/stretchr/testify v1.8.4
@@ -29,7 +29,7 @@ require (
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/google/uuid v1.5.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/jonboulle/clockwork v0.4.0 // indirect
