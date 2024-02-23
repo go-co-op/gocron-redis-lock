@@ -23,7 +23,7 @@ import (
 	"github.com/go-co-op/gocron/v2"
 	"github.com/redis/go-redis/v9"
 
-	redislock "github.com/go-co-op/gocron-redis-lock"
+	redislock "github.com/go-co-op/gocron-redis-lock/v2"
 )
 
 func main() {
