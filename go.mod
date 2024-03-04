@@ -6,7 +6,7 @@ require (
 	github.com/go-co-op/gocron/v2 v2.1.2
 	github.com/go-redsync/redsync/v4 v4.11.0
 	github.com/redis/go-redis/v9 v9.4.0
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	github.com/testcontainers/testcontainers-go/modules/redis v0.27.0
 )
 
