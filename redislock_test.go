@@ -106,7 +106,7 @@ func TestAutoExtend(t *testing.T) {
 	time.Sleep(9 * time.Second)
 
 	_, err = l2.Lock(ctx, "test2")
-	require.Equal(t, gocron.ErrFailedToObtainLock, err)
+	require.Equal(t, ErrFailedToObtainLock, err)
 
 	err = unlocker.Unlock(ctx)
 	require.NoError(t, err)

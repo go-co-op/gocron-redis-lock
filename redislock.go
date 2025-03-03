@@ -45,7 +45,7 @@ func NewRedisLockerAlways(r redis.UniversalClient, options ...redsync.Option) (g
 
 func NewRedisLockerWithOptions(r redis.UniversalClient, options ...LockerOption) (gocron.Locker, error) {
 	if err := r.Ping(context.Background()).Err(); err != nil {
-		return nil, fmt.Errorf("%s: %w", gocron.ErrFailedToConnectToRedis, err)
+		return nil, fmt.Errorf("%s: %w", ErrFailedToConnectToRedis, err)
 	}
 	return newLockerWithOptions(r, options...), nil
 }
