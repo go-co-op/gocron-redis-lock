@@ -43,6 +43,8 @@ func NewRedisLockerAlways(r redis.UniversalClient, options ...redsync.Option) (g
 	return newLocker(r, options...), r.Ping(context.Background()).Err()
 }
 
+// NewRedisLockerWithOptions provides an implementation of the Locker interface using
+// redis for storage, with options to configure the locker.
 func NewRedisLockerWithOptions(r redis.UniversalClient, options ...LockerOption) (gocron.Locker, error) {
 	if err := r.Ping(context.Background()).Err(); err != nil {
 		return nil, fmt.Errorf("%s: %w", ErrFailedToConnectToRedis, err)

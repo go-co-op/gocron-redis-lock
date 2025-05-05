@@ -1,12 +1,13 @@
 module github.com/go-co-op/gocron-redis-lock/v2
 
-go 1.22
-toolchain go1.24.1
+go 1.23.0
+
+toolchain go1.24.2
 
 require (
 	github.com/go-co-op/gocron/v2 v2.16.1
 	github.com/go-redsync/redsync/v4 v4.13.0
-	github.com/redis/go-redis/v9 v9.7.3
+	github.com/redis/go-redis/v9 v9.8.0
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go/modules/redis v0.37.0
 )
@@ -16,7 +17,7 @@ require (
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
-	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/containerd/log v0.1.0 // indirect
 	github.com/containerd/platforms v0.2.1 // indirect
 	github.com/cpuguy83/dockercfg v0.3.2 // indirect
@@ -65,9 +66,9 @@ require (
 	go.opentelemetry.io/otel v1.35.0 // indirect
 	go.opentelemetry.io/otel/metric v1.35.0 // indirect
 	go.opentelemetry.io/otel/trace v1.35.0 // indirect
-	golang.org/x/crypto v0.37.0 // indirect
-	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.32.0 // indirect
+	golang.org/x/crypto v0.38.0 // indirect
+	golang.org/x/sync v0.14.0 // indirect
+	golang.org/x/sys v0.33.0 // indirect
 	google.golang.org/protobuf v1.36.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

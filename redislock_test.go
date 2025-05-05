@@ -13,9 +13,11 @@ import (
 	testcontainersredis "github.com/testcontainers/testcontainers-go/modules/redis"
 )
 
+const imageName = "redis:7"
+
 func TestEnableDistributedLocking(t *testing.T) {
 	ctx := context.Background()
-	redisContainer, err := testcontainersredis.RunContainer(ctx)
+	redisContainer, err := testcontainersredis.Run(ctx, imageName)
 	require.NoError(t, err)
 	t.Cleanup(func() {
 		if err := redisContainer.Terminate(ctx); err != nil {
@@ -70,7 +72,7 @@ func TestEnableDistributedLocking(t *testing.T) {
 
 func TestAutoExtend(t *testing.T) {
 	ctx := context.Background()
-	redisContainer, err := testcontainersredis.RunContainer(ctx)
+	redisContainer, err := testcontainersredis.Run(ctx, imageName)
 	require.NoError(t, err)
 	t.Cleanup(func() {
 		if err := redisContainer.Terminate(ctx); err != nil {
