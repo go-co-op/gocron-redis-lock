@@ -7,7 +7,7 @@ toolchain go1.24.2
 require (
 	github.com/go-co-op/gocron/v2 v2.16.3
 	github.com/go-redsync/redsync/v4 v4.13.0
-	github.com/redis/go-redis/v9 v9.10.0
+	github.com/redis/go-redis/v9 v9.12.1
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go/modules/redis v0.37.0
 )
