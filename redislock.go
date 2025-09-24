@@ -75,10 +75,11 @@ type redisLocker struct {
 	rs                 *redsync.Redsync
 	options            []redsync.Option
 	autoExtendDuration time.Duration
+	keyPrefix          string
 }
 
 func (r *redisLocker) Lock(ctx context.Context, key string) (gocron.Lock, error) {
-	mu := r.rs.NewMutex(key, r.options...)
+	mu := r.rs.NewMutex(r.keyPrefix+key, r.options...)
 	err := mu.LockContext(ctx)
 	if err != nil {
 		return nil, ErrFailedToObtainLock
