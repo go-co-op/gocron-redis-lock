@@ -23,6 +23,7 @@ func WithRedsyncOptions(options ...redsync.Option) LockerOption {
 	}
 }
 
+// WithKeyPrefix is a LockerOption for adding a prefix to the lock key
 func WithKeyPrefix(prefix string) LockerOption {
 	return func(locker *redisLocker) {
 		locker.keyPrefix = prefix
