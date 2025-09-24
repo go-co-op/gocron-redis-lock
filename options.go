@@ -22,3 +22,9 @@ func WithRedsyncOptions(options ...redsync.Option) LockerOption {
 		locker.options = options
 	}
 }
+
+func WithKeyPrefix(prefix string) LockerOption {
+	return func(locker *redisLocker) {
+		locker.keyPrefix = prefix
+	}
+}
