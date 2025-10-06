@@ -119,6 +119,8 @@ func (r *redisLock) Unlock(ctx context.Context) error {
 
 func (r *redisLock) doExtend() {
 	ticker := time.NewTicker(r.autoExtendDuration)
+	defer ticker.Stop()
+
 	for {
 		select {
 		case <-r.done:
