@@ -3,7 +3,7 @@ module github.com/go-co-op/gocron-redis-lock/v2
 go 1.24.0
 
 require (
-	github.com/go-co-op/gocron/v2 v2.16.6
+	github.com/go-co-op/gocron/v2 v2.17.0
 	github.com/go-redsync/redsync/v4 v4.14.0
 	github.com/redis/go-redis/v9 v9.14.0
 	github.com/stretchr/testify v1.11.1
