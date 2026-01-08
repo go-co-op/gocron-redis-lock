@@ -16,3 +16,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      gomod:
+        update-types:
+          - "minor"
+          - "patch"
