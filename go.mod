@@ -1,11 +1,11 @@
 module github.com/go-co-op/gocron-redis-lock/v2
 
-go 1.24.0
+go 1.24.9
 
 require (
 	github.com/go-co-op/gocron/v2 v2.19.1
-	github.com/go-redsync/redsync/v4 v4.15.0
-	github.com/redis/go-redis/v9 v9.17.3
+	github.com/go-redsync/redsync/v4 v4.16.0
+	github.com/redis/go-redis/v9 v9.18.0
 	github.com/stretchr/testify v1.11.1
 	github.com/testcontainers/testcontainers-go/modules/redis v0.40.0
 )
@@ -66,8 +66,9 @@ require (
 	go.opentelemetry.io/otel v1.35.0 // indirect
 	go.opentelemetry.io/otel/metric v1.35.0 // indirect
 	go.opentelemetry.io/otel/trace v1.35.0 // indirect
+	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/crypto v0.45.0 // indirect
-	golang.org/x/sys v0.38.0 // indirect
+	golang.org/x/sys v0.39.0 // indirect
 	google.golang.org/protobuf v1.36.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
